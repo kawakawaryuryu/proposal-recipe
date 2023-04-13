@@ -1,0 +1,2 @@
+# proposal-recipe
+LINEメッセージから取得した食材や調味料を元にレシビをChatGPTに問い合わせてLINEに返答するアプリ
