@@ -1,0 +1,15 @@
+{
+  "name": "proposalrecipe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kawakawaryuryu",
+  "license": "ISC",
+  "dependencies": {
+    "@line/bot-sdk": "^7.5.2",
+    "openai": "^3.2.1"
+  }
+}
