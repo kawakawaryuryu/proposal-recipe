@@ -4,16 +4,16 @@ import line from '@line/bot-sdk';
 
 export const handler = async(event) => {
     console.log(JSON.stringify(event));
-    
+
     const response = {
         statusCode: 200
     };
-    
+
     const requestBody = event.body;
-    
+
     // read line channel secret from parameter store
     const channelSecret = await getSecret('line_channel_secret');
-    
+
     // verify signature
     const requestBodyStr = JSON.stringify(requestBody);
     const receivedSignature = event['x-line-signature'];
@@ -21,28 +21,28 @@ export const handler = async(event) => {
         console.log('invalid signature! generatedSignature: ', generateSignature(channelSecret, requestBodyStr), 'receivedSignature: ', receivedSignature);
         return response;
     }
-    
+
     // check if events array is not empty
     if (requestBody.events.length === 0) {
         console.log('events is empty. The request is for connectivity check');
         return response;
     }
-    
+
     // extract message
     const message = extractMessage(requestBody.events);
-    
+
     // ask recipe to openai
     const replyMessage = await askRecipe(message);
     console.log('openai reply:', replyMessage);
-    
+
     // extract reply token
     const replyToken = extractReplyToken(requestBody.events);
-    
+
     // send message to LINE
     await reply(replyMessage, replyToken);
-    
+
     console.log('replay successed!')
-    
+
     return response;
 };
 
@@ -91,19 +91,18 @@ const askRecipe = async(content) => {
     const apiKey = await getSecret('openai_api_key');
     const configuration = new Configuration({ apiKey });
     const openai = new OpenAIApi(configuration);
-    
+
     const completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
             {
                 "role": "system",
                 "content": "あなたは優秀な料理人です。これから指定する食材や調味料から作れる料理名とそのレシビを教えて下さい。"
-                
+
             },
             {
                 "role": "user",
                 content
-                
             }
         ]
     });
@@ -115,12 +114,12 @@ const reply = async(text, replyToken) => {
     const client = new line.Client({
       channelAccessToken
     });
-    
+
     const message = {
       type: 'text',
       text
     };
-    
+
     try {
         await client.replyMessage(replyToken, message);
     } catch (e) {
