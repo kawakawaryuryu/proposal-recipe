@@ -18,7 +18,7 @@ jobs:
       - run: npm install
 
       - name: zip package
-        run: ls -la && zip -r package.zip .
+        run: ls -la && zip -r package.zip . -x .git .github .gitignore README.md
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
