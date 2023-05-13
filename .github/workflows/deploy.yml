@@ -1,5 +1,6 @@
 name: deploy
-on: [push]
+on:
+  - push
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -25,6 +26,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: MySession
 
       - name: deploy to lambda
         run: aws lambda update-function-code --function-name ${{ env.FUNCTION_NAME }} --zip-file fileb://package.zip
