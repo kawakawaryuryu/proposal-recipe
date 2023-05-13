@@ -1,0 +1,35 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip3 install awscli
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install
+
+      - name: zip package
+        run: ls -la && zip -r package.zip . -x .git .github .gitignore README.md
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: deploy to lambda
+        run: aws lambda update-function-code --function-name ${{ env.FUNCTION_NAME }} --zip-file fileb://package.zip
+        env:
+          FUNCTION_NAME: proposal-recipe
