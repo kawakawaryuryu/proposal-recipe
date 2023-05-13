@@ -18,7 +18,7 @@ jobs:
       - run: npm install
 
       - name: zip package
-        run: zip -r package.zip proposal-recipe/*
+        run: zip -r package.zip proposal-recipe
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
