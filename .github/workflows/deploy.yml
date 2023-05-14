@@ -32,4 +32,4 @@ jobs:
       - name: deploy to lambda
         run: aws lambda update-function-code --function-name ${{ env.FUNCTION_NAME }} --zip-file fileb://package.zip
         env:
-          FUNCTION_NAME: proposal-recipe
+          FUNCTION_NAME: proposalRecipe
